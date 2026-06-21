@@ -6,7 +6,6 @@
 <div class="max-w-7xl mx-auto px-6 py-12">
     <div class="flex items-center justify-between mb-10">
         <h2 class="text-3xl font-extrabold text-dark-red uppercase tracking-wide border-l-8 border-bright-yellow pl-4">Menu Favorit Saya</h2>
-        <a href="/" class="text-dark-red font-bold hover:underline">← Kembali ke Menu</a>
     </div>
 
     <div id="favorites-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -35,7 +34,9 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-800">Belum Ada Favorit</h3>
                     <p class="text-gray-400 mt-2 mb-6">Kamu belum menyukai menu apapun. Yuk, jelajahi menu lezat kami!</p>
-                    <a href="/" class="btn-primary inline-block">Cari Menu Lezat</a>
+                    <a href="/" class="inline-block bg-dark-red text-white py-4 px-10 rounded-full hover:bg-bright-yellow hover:text-dark-red transition shadow-xl font-bold transform hover:scale-105 active:scale-95">
+                        Cari Menu Lezat
+                    </a>
                 </div>
             `;
             return;

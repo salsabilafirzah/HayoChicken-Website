@@ -21,8 +21,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}/success', [OrderController::class, 'success'])->name('orders.success');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{order}/receipt', [OrderController::class, 'uploadReceipt'])->name('orders.receipt');
+    
+    Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
+    Route::post('/profile', [HomeController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/password', [HomeController::class, 'updatePassword'])->name('profile.password');
     
     Route::get('/dashboard', function () {
         return redirect()->route('home');

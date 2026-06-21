@@ -12,36 +12,41 @@
         @forelse($orders as $order)
         <div class="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition flex flex-col md:flex-row">
             <div class="p-8 flex-grow">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">#{{ $order->order_number }}</span>
-                        <h3 class="text-xl font-bold text-gray-800">{{ $order->created_at->format('d M Y, H:i') }}</h3>
+                <div class="flex justify-between items-center">
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">#{{ $order->order_number }}</span>
+                            <h3 class="text-xl font-bold text-gray-800">{{ $order->created_at->format('d M Y, H:i') }}</h3>
+                        </div>
+                        <div class="flex items-center space-x-6 text-sm text-gray-500">
+                            <div>
+                                <span class="block font-bold text-gray-400 uppercase text-[10px]">Total</span>
+                                <span class="text-dark-red font-black text-lg">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
+                            </div>
+                            <div>
+                                <span class="block font-bold text-gray-400 uppercase text-[10px]">Pembayaran</span>
+                                <span class="font-bold text-gray-700 capitalize">{{ $order->payment_method }}</span>
+                            </div>
+                        </div>
                     </div>
+                    
                     @php
                         $statusClasses = [
                             'pending' => 'bg-orange-100 text-orange-600',
+                            'verifying' => 'bg-purple-100 text-purple-600',
                             'processing' => 'bg-blue-100 text-blue-600',
+                            'shipping' => 'bg-indigo-100 text-indigo-600',
                             'completed' => 'bg-green-100 text-green-600',
                             'cancelled' => 'bg-red-100 text-red-600',
                         ];
                     @endphp
-                    <span class="px-4 py-1 rounded-full text-xs font-black uppercase {{ $statusClasses[$order->status] ?? 'bg-gray-100 text-gray-600' }}">
+                    <span class="px-6 py-2.5 rounded-xl text-xs font-black capitalize shadow-sm {{ $statusClasses[$order->status] ?? 'bg-gray-100 text-gray-600' }}">
                         {{ $order->status }}
                     </span>
                 </div>
-                <div class="flex items-center space-x-6 text-sm text-gray-500">
-                    <div>
-                        <span class="block font-bold text-gray-400 uppercase text-[10px]">Total</span>
-                        <span class="text-dark-red font-black text-lg">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
-                    </div>
-                    <div>
-                        <span class="block font-bold text-gray-400 uppercase text-[10px]">Pembayaran</span>
-                        <span class="font-bold text-gray-700 capitalize">{{ $order->payment_method }}</span>
-                    </div>
-                </div>
             </div>
-            <div class="bg-gray-50 px-8 py-6 md:w-48 flex flex-col justify-center items-center space-y-4 border-t md:border-t-0 md:border-l border-gray-100">
-                <a href="{{ route('orders.show', $order->id) }}" class="w-full text-center py-2 bg-dark-red text-white rounded-xl font-bold hover:bg-red-800 transition shadow-md">Detail</a>
+            <div class="bg-gray-50 px-8 py-6 md:w-48 flex flex-col justify-center items-center border-t md:border-t-0 md:border-l border-gray-100">
+                <a href="{{ route('orders.show', $order->id) }}" class="w-full text-center py-2.5 bg-dark-red text-white rounded-xl font-bold hover:bg-bright-yellow hover:text-dark-red transition shadow-md">Detail</a>
                 @if($order->status === 'pending' && !$order->payment_receipt && $order->payment_method !== 'cash')
                     <span class="text-[10px] text-orange-500 font-bold uppercase text-center animate-pulse">Butuh Bukti Transfer</span>
                 @endif

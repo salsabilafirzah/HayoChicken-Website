@@ -12,6 +12,9 @@
     
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -44,16 +47,38 @@
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
         }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #9B1A1A33;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #9B1A1A66;
+        }
     </style>
+    @livewireStyles
 </head>
 <body class="min-h-screen flex flex-col" 
-    x-data="{ showLogin: false, showRegister: false }"
+    x-data="{ showLogin: false, showRegister: false, cartCount: 0 }"
     x-on:open-login.window="showLogin = true"
     x-on:open-register.window="showRegister = true"
+    x-on:cart-updated.window="cartCount = $event.detail.count"
     x-init="
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('auth') === 'login') showLogin = true;
         if (urlParams.get('auth') === 'register') showRegister = true;
+        
+        // Auto-open if errors
+        if ('{{ $errors->any() }}' && '{{ old("auth_type") }}' === 'login') showLogin = true;
+        if ('{{ $errors->any() }}' && '{{ old("auth_type") }}' === 'register') showRegister = true;
+        
+        // Update initial cart count
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        cartCount = cart.length;
     "
 >
 
@@ -74,7 +99,7 @@
                     <a href="{{ route('favorites') }}" class="nav-link font-bold hover:text-bright-yellow">Favorit</a>
                     <a href="{{ route('cart.index') }}" class="relative nav-link font-bold hover:text-bright-yellow">
                         Keranjang
-                        <span id="cart-count" class="absolute -top-2 -right-6 bg-bright-yellow text-dark-red text-[10px] font-black px-1.5 py-0.5 rounded-full border-2 border-dark-red">0</span>
+                        <span id="cart-count" x-show="cartCount > 0" class="absolute -top-2 -right-6 bg-bright-yellow text-dark-red text-[10px] font-black px-1.5 py-0.5 rounded-full border-2 border-dark-red" x-text="cartCount"></span>
                     </a>
                     
                     @if(auth()->user()->role === 'seller')
@@ -83,10 +108,8 @@
                         <a href="{{ route('orders.index') }}" class="nav-link font-bold hover:text-bright-yellow">Pesanan Saya</a>
                     @endif
 
-                    <form method="POST" action="{{ route('logout') }}" class="m-0 pl-4 border-l border-white/20">
-                        @csrf
-                        <button type="submit" class="text-[10px] font-bold text-white/50 hover:text-white uppercase tracking-[0.2em] transition">Logout</button>
-                    </form>
+                    <!-- Profile Link as Text -->
+                    <a href="{{ route('profile') }}" class="nav-link font-bold hover:text-bright-yellow">Profil</a>
                 @else
                     <button @click="showLogin = true" class="bg-white text-dark-red px-8 py-2 rounded-full font-black hover:bg-bright-yellow hover:text-dark-red transition shadow-xl transform hover:scale-105 active:scale-95">Login</button>
                 @endauth
@@ -111,21 +134,22 @@
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
 
-                <div class="bg-[#F8EFDE] rounded-[3rem] shadow-2xl p-10 border border-dark-red/10 overflow-hidden relative">
+                <div class="bg-[#F8EFDE] rounded-[3.5rem] shadow-2xl p-10 border-2 border-dark-red/20 ring-1 ring-black/5 overflow-hidden relative w-full h-[580px] flex flex-col justify-center">
                     <div class="absolute -top-10 -right-10 w-24 h-24 bg-bright-yellow/30 rounded-full blur-2xl"></div>
                     <div class="text-center mb-8">
                         <div class="w-20 h-20 bg-dark-red rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl border-4 border-bright-yellow">
                             <img src="{{ asset('images/logo.png') }}" class="h-12 w-auto">
                         </div>
                         <h2 class="text-2xl font-black text-dark-red uppercase">Login Akun</h2>
-                        <p class="text-gray-500 text-[10px] font-black tracking-[0.2em] mt-1">Hayo Chicken - Pedasnya Nampol!</p>
+                        <p class="text-gray-500 text-[10px] font-black tracking-[0.2em] mt-1 uppercase">Hayo Chicken - Pedasnya Nampol!</p>
                     </div>
 
-                    <form method="POST" action="{{ route('login.store') }}" class="space-y-4">
+                    <form method="POST" action="{{ route('login.store') }}" class="space-y-5">
                         @csrf
+                        <input type="hidden" name="auth_type" value="login">
                         
-                        @if($errors->any())
-                            <div class="bg-red-50 text-red-500 p-3 rounded-xl text-[10px] font-bold uppercase tracking-widest border border-red-100">
+                        @if($errors->any() && old('auth_type') === 'login')
+                            <div class="bg-red-50 text-red-500 p-3 rounded-xl text-[10px] font-bold mt-2">
                                 {{ $errors->first() }}
                             </div>
                         @endif
@@ -138,12 +162,12 @@
                             <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Password</label>
                             <input type="password" name="password" required class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red shadow-sm" placeholder="********">
                         </div>
-                        <button type="submit" class="w-full bg-dark-red text-white font-black py-4 rounded-2xl shadow-xl hover:bg-black transition transform hover:-translate-y-1 active:scale-95 text-lg mt-4">
+                        <button type="submit" class="w-full bg-dark-red text-white font-black py-4 rounded-2xl shadow-xl hover:bg-bright-yellow hover:text-dark-red transition transform hover:-translate-y-1 active:scale-95 text-lg mt-4">
                             Masuk Sekarang
                         </button>
                     </form>
 
-                    <p class="text-center mt-6 text-sm text-gray-400 font-medium">
+                    <p class="text-center mt-8 text-sm text-gray-400 font-bold">
                         Belum punya akun? <button @click="showLogin = false; showRegister = true" class="text-dark-red font-black hover:underline underline-offset-4 tracking-tighter">Daftar Di Sini</button>
                     </p>
                 </div>
@@ -161,41 +185,52 @@
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
 
-                <div class="bg-[#F8EFDE] rounded-[3rem] shadow-2xl p-10 border border-dark-red/10 overflow-hidden relative">
+                <div class="bg-[#F8EFDE] rounded-[3.5rem] shadow-2xl p-10 border-2 border-dark-red/20 ring-1 ring-black/5 overflow-hidden relative w-full h-[580px] flex flex-col">
                     <div class="absolute -top-10 -right-10 w-24 h-24 bg-bright-yellow/30 rounded-full blur-2xl"></div>
-                    <div class="text-center mb-8">
+                    
+                    <div class="text-center mb-6">
                         <div class="w-20 h-20 bg-dark-red rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl border-4 border-bright-yellow">
                             <img src="{{ asset('images/logo.png') }}" class="h-12 w-auto">
                         </div>
                         <h2 class="text-2xl font-black text-dark-red uppercase">Daftar Akun</h2>
                     </div>
 
-                    <form method="POST" action="{{ route('register.store') }}" class="space-y-4">
-                        @csrf
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Nama Lengkap</label>
-                            <input type="text" name="name" required class="w-full bg-gray-50 border-none rounded-2xl p-3 text-sm focus:ring-2 focus:ring-dark-red" placeholder="Nama Kamu">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
-                            <input type="email" name="email" required class="w-full bg-gray-50 border-none rounded-2xl p-3 text-sm focus:ring-2 focus:ring-dark-red" placeholder="email@kamu.com">
-                        </div>
-                        <div class="space-y-1 flex gap-2">
-                            <div class="flex-1">
-                                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Password</label>
-                                <input type="password" name="password" required class="w-full bg-gray-50 border-none rounded-2xl p-3 text-sm focus:ring-2 focus:ring-dark-red" placeholder="********">
-                            </div>
-                            <div class="flex-1">
-                                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Ulangi</label>
-                                <input type="password" name="password_confirmation" required class="w-full bg-gray-50 border-none rounded-2xl p-3 text-sm focus:ring-2 focus:ring-dark-red" placeholder="********">
-                            </div>
-                        </div>
-                        <button type="submit" class="w-full bg-dark-red text-white font-black py-4 rounded-2xl shadow-xl hover:bg-black transition transform hover:-translate-y-1 active:scale-95 text-lg mt-4">
-                            Buat Akun
-                        </button>
-                    </form>
+                    <div class="overflow-y-auto pr-1 flex-grow custom-scrollbar">
+                        <form method="POST" action="{{ route('register.store') }}" class="space-y-4 px-1">
+                            @csrf
+                            <input type="hidden" name="auth_type" value="register">
 
-                    <p class="text-center mt-6 text-sm text-gray-400 font-medium">
+                            @if($errors->any() && old('auth_type') === 'register')
+                                <div class="bg-red-50 text-red-500 p-3 rounded-xl text-[10px] font-bold mb-4">
+                                    {{ $errors->first() }}
+                                </div>
+                            @endif
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Nama Lengkap</label>
+                                <input type="text" name="name" required class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red shadow-sm font-medium" placeholder="Nama Kamu">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
+                                <input type="email" name="email" required class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red shadow-sm font-medium" placeholder="email@kamu.com">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Password</label>
+                                    <input type="password" name="password" required class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red shadow-sm font-medium" placeholder="********">
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Ulangi</label>
+                                    <input type="password" name="password_confirmation" required class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red shadow-sm font-medium" placeholder="********">
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-dark-red text-white font-black py-4 rounded-2xl shadow-xl hover:bg-bright-yellow hover:text-dark-red transition transform active:scale-95 text-lg mt-2">
+                                Buat Akun
+                            </button>
+                        </form>
+                    </div>
+
+                    <p class="text-center mt-6 text-sm text-gray-400 font-bold border-t border-gray-100 pt-6">
                         Sudah punya akun? <button @click="showRegister = false; showLogin = true" class="text-dark-red font-black hover:underline underline-offset-4 tracking-tighter">Masuk Di Sini</button>
                     </p>
                 </div>
@@ -227,18 +262,19 @@
             <div>
                 <h4 class="font-bold mb-6 text-bright-yellow uppercase text-xs tracking-widest">Hayo Links</h4>
                 <ul class="space-y-4 text-gray-400 text-sm">
-                    <li><a href="/" class="hover:text-white transition">Menu Utama</a></li>
-                    <li><a href="#" class="hover:text-white transition">Promo Spesial</a></li>
-                    <li><a href="#" class="hover:text-white transition">Tentang Kami</a></li>
-                    <li><a href="#" class="hover:text-white transition">Kontak</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-bold mb-6 text-bright-yellow uppercase text-xs tracking-widest">Bantuan</h4>
-                <ul class="space-y-4 text-gray-400 text-sm">
-                    <li><a href="#" class="hover:text-white transition">Cara Pesan</a></li>
-                    <li><a href="#" class="hover:text-white transition">Pengiriman</a></li>
-                    <li><a href="#" class="hover:text-white transition">FAQ</a></li>
+                    <li><a href="/" class="hover:text-white transition">Menu</a></li>
+                    @auth
+                        <li><a href="{{ route('favorites') }}" class="hover:text-white transition">Favorit</a></li>
+                        <li><a href="{{ route('cart.index') }}" class="hover:text-white transition">Keranjang</a></li>
+                        @if(auth()->user()->role === 'seller')
+                            <li><a href="{{ route('admin.dashboard') }}" class="hover:text-white transition text-bright-yellow font-bold">Panel Admin</a></li>
+                        @else
+                            <li><a href="{{ route('orders.index') }}" class="hover:text-white transition">Pesanan Saya</a></li>
+                        @endif
+                        <li><a href="{{ route('profile') }}" class="hover:text-white transition">Profil</a></li>
+                    @else
+                        <li><button @click="showLogin = true" class="hover:text-white transition text-left">Login / Daftar</button></li>
+                    @endauth
                 </ul>
             </div>
         </div>
@@ -253,10 +289,35 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const cartCount = document.getElementById('cart-count');
-            if (cartCount) cartCount.innerText = cart.length;
+            // Already handled by Alpine x-init
         });
+
+        function confirmLogout(event) {
+            event.preventDefault();
+            const form = event.target.closest('form');
+            
+            Swal.fire({
+                title: 'Keluar Akun?',
+                text: "Apakah kamu yakin ingin keluar dari Hayo Chicken?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#9B1A1A',
+                cancelButtonColor: '#aaaaaa',
+                confirmButtonText: 'Ya, Logout!',
+                cancelButtonText: 'Batal',
+                borderRadius: '2.5rem',
+                customClass: {
+                    popup: 'rounded-[2.5rem] shadow-2xl',
+                    confirmButton: 'rounded-full px-8 py-3 font-black uppercase text-xs tracking-widest',
+                    cancelButton: 'rounded-full px-8 py-3 font-black uppercase text-xs tracking-widest'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
     </script>
+    @livewireScripts
 </body>
 </html>

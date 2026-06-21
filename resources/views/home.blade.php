@@ -7,61 +7,40 @@
         <!-- Dynamic Hero Slider (FOR AUTHENTICATED USERS) -->
         <section class="px-6 py-8" x-data="{ 
             activeSlide: 1, 
-            totalSlides: 3,
+            totalSlides: 2,
             autoPlay() {
                 setInterval(() => {
                     this.activeSlide = this.activeSlide === this.totalSlides ? 1 : this.activeSlide + 1;
                 }, 6000);
             }
         }" x-init="autoPlay()">
-            <div class="max-w-7xl mx-auto relative h-[300px] md:h-[400px] overflow-hidden rounded-[3rem] shadow-2xl border-b-4 border-black/10">
+            <div class="max-w-7xl mx-auto relative h-[300px] md:h-[400px] overflow-hidden rounded-[3rem] shadow-2xl border-b-4 border-black/10 isolate transform translate-z-0" style="-webkit-mask-image: -webkit-radial-gradient(white, black);">
                 
-                <!-- Slide 1: Promo Es Teh (Friday Only) -->
-                <div x-show="activeSlide === 1" x-transition.opacity.duration.1000ms class="absolute inset-0 bg-gradient-to-br from-green-600 to-green-900 flex items-center px-12 md:px-24">
-                    <div class="absolute -top-10 -right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-                    <div class="absolute bottom-10 left-10 w-32 h-32 bg-yellow-400/10 rounded-full blur-2xl"></div>
-                    
-                    <div class="flex-1 text-white relative z-10">
-                        <span class="inline-block bg-bright-yellow text-dark-red px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4">Limited Promo</span>
-                        <h2 class="text-4xl md:text-7xl font-black mb-2 leading-none drop-shadow-lg">Promo <br><span class="text-bright-yellow">Jumat Berkah!</span></h2>
-                        <p class="text-lg md:text-xl font-medium opacity-90 mb-8 max-w-md">Klaim sekarang & dapatkan FREE Es Teh segar setiap pembelian hari Jumat.</p>
-                        <button 
-                            @click="localStorage.setItem('claimed_teh', 'true'); alert('Promo diklaim! 🍵 Free Es Teh akan otomatis muncul di keranjangmu setiap hari Jumat.')" 
-                            class="bg-white text-green-900 px-10 py-4 rounded-full font-black text-lg hover:bg-bright-yellow hover:scale-110 transition shadow-xl active:scale-95"
-                        >
-                            Klaim Promo
-                        </button>
-                    </div>
-                    <div class="hidden md:block flex-shrink-0 relative z-10">
-                        <img src="{{ asset('images/esteh.png') }}" class="h-72 object-contain drop-shadow-2xl floating">
-                    </div>
-                </div>
-
-                <!-- Slide 2: New Menu (Mie Jebew) -->
-                <div x-show="activeSlide === 2" x-transition.opacity.duration.1000ms class="absolute inset-0 bg-gradient-to-br from-[#FFB21E] to-[#E58E00] flex items-center px-12 md:px-24">
+                <!-- Slide 1: New Menu (Paket Nasi Goreng) -->
+                <div x-show="activeSlide === 1" x-transition.opacity.duration.1000ms class="absolute inset-0 bg-gradient-to-br from-[#FFB21E] to-[#E58E00] flex items-center px-12 md:px-24">
                     <div class="absolute top-0 right-0 w-1/2 h-full bg-white/10 skew-x-12 translate-x-32"></div>
                     
                     <div class="flex-1 text-dark-red relative z-10">
                         <span class="inline-block bg-dark-red text-white px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4 font-black">Must Try!</span>
-                        <h2 class="text-4xl md:text-7xl font-black mb-2 leading-none drop-shadow-lg text-white">NEW <br>MIE JEBEW</h2>
-                        <p class="text-lg md:text-xl font-bold opacity-90 mb-8 max-w-md">Pedasnya nampol, gurihnya dapet! Mie Jebew Ayam Saus Keju spesial.</p>
+                        <h2 class="text-4xl md:text-7xl font-black mb-2 leading-none drop-shadow-lg text-white uppercase tracking-tighter">OUR NEW <br>MENU</h2>
+                        <p class="text-lg md:text-xl font-bold opacity-90 mb-8 max-w-md">Nikmati Paket Nasgor spesial dengan bumbu rahasia Hayo Chicken. Gurihnya bikin nagih!</p>
                         <button 
-                            onclick="filterCategory('Mie'); document.getElementById('menu-section').scrollIntoView({behavior:'smooth'})" 
-                            class="bg-dark-red text-white px-10 py-4 rounded-full font-black text-lg hover:bg-black hover:scale-110 transition shadow-xl"
+                            onclick="filterCategory('Nasgor'); document.getElementById('menu-section').scrollIntoView({behavior:'smooth'})" 
+                            class="bg-dark-red text-white px-10 py-4 rounded-full font-black text-lg hover:bg-bright-yellow hover:text-dark-red hover:scale-110 transition shadow-xl"
                         >
                             Pesan Sekarang
                         </button>
                     </div>
                     <div class="hidden md:block flex-shrink-0 relative z-10">
-                        <img src="{{ asset('images/mie_jebew.png') }}" class="h-72 object-contain drop-shadow-2xl">
+                        <img src="{{ asset('images/paket_nasgor.png') }}" class="h-[500px] object-contain drop-shadow-2xl transform scale-110 translate-x-10">
                     </div>
                 </div>
 
-                <!-- Slide 3: Best Seller (Ayam Geprek) -->
-                <div x-show="activeSlide === 3" x-transition.opacity.duration.1000ms class="absolute inset-0 bg-gradient-to-br from-dark-red to-[#7B0D0D] flex items-center px-12 md:px-24">
+                <!-- Slide 2: Best Seller (Ayam Geprek) -->
+                <div x-show="activeSlide === 2" x-transition.opacity.duration.1000ms class="absolute inset-0 bg-gradient-to-br from-dark-red to-[#7B0D0D] flex items-center px-12 md:px-24 text-white">
                     <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-bright-yellow/10 rounded-full blur-3xl"></div>
                     
-                    <div class="flex-1 text-white relative z-10">
+                    <div class="flex-1 relative z-10">
                         <span class="inline-block bg-bright-yellow text-dark-red px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4">Legendary Taste</span>
                         <h2 class="text-4xl md:text-7xl font-black mb-2 leading-none drop-shadow-lg">BEST <br><span class="text-bright-yellow">SELLER KIT!</span></h2>
                         <p class="text-lg md:text-xl font-medium opacity-90 mb-8 max-w-md">Paket Ayam Geprek andalan sejuta umat. Sambal merahnya juara!</p>
@@ -73,7 +52,7 @@
                         </button>
                     </div>
                     <div class="hidden md:block flex-shrink-0 relative z-10">
-                        <img src="{{ asset('images/paket_geprek.png') }}" class="h-72 object-contain drop-shadow-2xl">
+                        <img src="{{ asset('images/paket_geprek.png') }}" class="h-[500px] object-contain drop-shadow-2xl transform scale-110 translate-x-10">
                     </div>
                 </div>
 
@@ -118,15 +97,30 @@
 
 <!-- Category Filter -->
 <div id="menu" class="max-w-7xl mx-auto px-6 py-12">
-    <div class="flex flex-wrap items-center justify-between mb-10 gap-4">
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <h2 class="text-3xl font-extrabold text-dark-red uppercase tracking-wide border-l-8 border-bright-yellow pl-4">Menu Kami</h2>
         
-        <div class="flex space-x-2">
-            <button onclick="filterCategory('all', this)" class="cat-btn px-6 py-2 rounded-full bg-bright-yellow text-dark-red font-bold shadow-md hover:bg-yellow-500 transition">Semua</button>
-            @foreach($categories as $category)
-                <button onclick="filterCategory('{{ $category->category }}', this)" class="cat-btn px-6 py-2 rounded-full bg-white text-gray-600 font-bold border border-gray-200 hover:border-bright-yellow hover:text-dark-red transition">{{ $category->category }}</button>
-            @endforeach
+        <!-- Search Bar -->
+        <div class="relative w-full md:w-96 group">
+            <input 
+                type="text" 
+                id="menu-search" 
+                onkeyup="filterMenu()"
+                placeholder="Cari menu favoritmu..." 
+                class="w-full pl-12 pr-6 py-3.5 rounded-full border-2 border-gray-100 focus:border-bright-yellow focus:ring-0 transition-all duration-300 shadow-sm font-medium text-gray-700 bg-white group-hover:shadow-md"
+            >
+            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-dark-red transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
         </div>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="flex flex-wrap items-center gap-3 mb-10 overflow-x-auto pb-2 scrollbar-hide">
+        <button onclick="updateCategory('all', this)" class="cat-btn px-8 py-2.5 rounded-full bg-bright-yellow text-dark-red font-bold shadow-md hover:scale-105 transition active:scale-95 whitespace-nowrap" data-cat="all">Semua</button>
+        @foreach($categories as $category)
+            <button onclick="updateCategory('{{ $category->category }}', this)" class="cat-btn px-8 py-2.5 rounded-full bg-white text-gray-600 font-bold border-2 border-gray-100 hover:border-bright-yellow hover:text-dark-red hover:scale-105 transition active:scale-95 whitespace-nowrap" data-cat="{{ $category->category }}">{{ $category->category }}</button>
+        @endforeach
     </div>
 
     <!-- Product Grid -->
@@ -155,21 +149,29 @@
                     <p class="text-gray-500 line-clamp-2 leading-relaxed">{{ $product->description }}</p>
                 </div>
                 
-                <div class="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-yellow-400">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                        </span>
-                        <span class="font-bold text-gray-700">4.9</span>
-                    </div>
-                    <button onclick="addToCart({{ $product->id }})" class="bg-dark-red text-white p-3 rounded-2xl hover:bg-red-800 transition shadow-lg flex items-center space-x-2 group/btn">
+                <div class="mt-8 pt-6 border-t border-gray-100">
+                    <button onclick="addToCart({{ $product->id }})" class="w-full bg-dark-red text-white py-4 rounded-2xl hover:bg-bright-yellow hover:text-dark-red transition shadow-lg flex items-center justify-center space-x-3 group/btn">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        <span class="font-bold pr-2">Tambah</span>
+                        <span class="font-bold">Tambah ke Keranjang</span>
                     </button>
                 </div>
             </div>
         </div>
         @endforeach
+    </div>
+
+    <!-- Empty State (No Menu Found) -->
+    <div id="empty-menu" class="hidden py-24 text-center animate-in fade-in zoom-in duration-500">
+        <div class="w-32 h-32 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+            <svg class="w-16 h-16 text-dark-red/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </div>
+        <h3 class="text-3xl font-black text-gray-800 mb-2">Ups! Menu Tidak Ditemukan</h3>
+        <p class="text-gray-400 font-medium text-lg">Coba kata kunci lain atau pilih kategori yang berbeda.</p>
+        <button onclick="resetFilters()" class="mt-8 text-dark-red font-black hover:underline underline-offset-8">
+            Lihat Semua Menu
+        </button>
     </div>
 </div>
 
@@ -212,6 +214,7 @@
             
             const cartCount = document.getElementById('cart-count');
             if (cartCount) cartCount.innerText = cart.length;
+            window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: cart.length } }));
             
             setTimeout(() => {
                 btn.innerHTML = originalHtml;
@@ -259,26 +262,68 @@
         });
     }
 
-    function filterCategory(category, element) {
-        const products = document.querySelectorAll('.product-card');
-        const buttons = document.querySelectorAll('.cat-btn');
+    let currentCategory = 'all';
+
+    function updateCategory(category, element) {
+        currentCategory = category;
         
         // Update button styles
-        buttons.forEach(btn => {
-            btn.classList.remove('bg-bright-yellow', 'text-dark-red');
-            btn.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.classList.remove('bg-bright-yellow', 'text-dark-red', 'shadow-md');
+            btn.classList.add('bg-white', 'text-gray-600', 'border-2', 'border-gray-100');
         });
-        element.classList.add('bg-bright-yellow', 'text-dark-red');
-        element.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
+        element.classList.remove('bg-white', 'text-gray-600', 'border-2', 'border-gray-100');
+        element.classList.add('bg-bright-yellow', 'text-dark-red', 'shadow-md');
 
-        // Filter products
+        filterMenu();
+    }
+
+    function filterMenu() {
+        const query = document.getElementById('menu-search').value.toLowerCase().trim();
+        const products = document.querySelectorAll('.product-card');
+        let visibleCount = 0;
+        
         products.forEach(p => {
-            if (category === 'all' || p.getAttribute('data-category') === category) {
+            const category = (p.getAttribute('data-category') || '').toLowerCase().trim();
+            const name = p.querySelector('h3').innerText.toLowerCase().trim();
+            
+            const matchesCategory = (currentCategory === 'all' || category === currentCategory.toLowerCase().trim());
+            const matchesSearch = name.includes(query);
+            
+            if (matchesCategory && matchesSearch) {
                 p.style.display = 'flex';
+                p.classList.add('animate-in', 'fade-in', 'duration-300');
+                visibleCount++;
             } else {
                 p.style.display = 'none';
             }
         });
+
+        // Show/Hide empty state
+        const emptyState = document.getElementById('empty-menu');
+        if (visibleCount === 0) {
+            emptyState.classList.remove('hidden');
+        } else {
+            emptyState.classList.add('hidden');
+        }
+    }
+
+    function resetFilters() {
+        document.getElementById('menu-search').value = '';
+        currentCategory = 'all';
+        
+        // Reset category buttons UI
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            if (btn.getAttribute('data-cat') === 'all') {
+                btn.classList.remove('bg-white', 'text-gray-600', 'border-2', 'border-gray-100');
+                btn.classList.add('bg-bright-yellow', 'text-dark-red', 'shadow-md');
+            } else {
+                btn.classList.add('bg-white', 'text-gray-600', 'border-2', 'border-gray-100');
+                btn.classList.remove('bg-bright-yellow', 'text-dark-red', 'shadow-md');
+            }
+        });
+        
+        filterMenu();
     }
 
     // Sync cart count and favorites on load

@@ -50,7 +50,9 @@
                                 @method('PATCH')
                                 <select name="status" onchange="this.form.submit()" class="text-xs font-bold uppercase rounded-lg border-gray-200 focus:ring-dark-red focus:border-dark-red">
                                     <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Proses</option>
+                                    <option value="verifying" {{ $order->status === 'verifying' ? 'selected' : '' }}>Verifikasi</option>
+                                    <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Dimasak</option>
+                                    <option value="shipping" {{ $order->status === 'shipping' ? 'selected' : '' }}>Dikirim</option>
                                     <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>Selesai</option>
                                     <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Batal</option>
                                 </select>

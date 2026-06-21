@@ -28,22 +28,35 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'items' => 'required|array',
+            'items' => 'required',
             'delivery_address' => 'required|string',
             'payment_method' => 'required|string',
+            'payment_receipt' => 'nullable|image|max:2048',
         ]);
 
+        $items = is_string($request->items) ? json_decode($request->items, true) : $request->items;
+
+        // Generate HC-YYYYMMDD-0001 format based on total orders
+        $today = date('Ymd');
+        $count = Order::count() + 1;
+        $orderNumber = 'HC-' . $today . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
+
         $order = Order::create([
-            'order_number' => 'HAYO-' . strtoupper(Str::random(8)),
+            'order_number' => $orderNumber,
             'user_id' => auth()->id(),
-            'total_price' => 0, // Will be calculated
+            'total_price' => 0,
             'status' => 'pending',
             'payment_method' => $request->payment_method,
             'delivery_address' => $request->delivery_address,
         ]);
 
+        if ($request->hasFile('payment_receipt')) {
+            $path = $request->file('payment_receipt')->store('receipts', 'public');
+            $order->update(['payment_receipt' => $path]);
+        }
+
         $total = 0;
-        foreach ($request->items as $item) {
+        foreach ($items as $item) {
             $product = Product::find($item['id']);
             $subtotal = $product->price * $item['qty'];
             
@@ -62,9 +75,16 @@ class OrderController extends Controller
 
         return response()->json([
             'success' => true,
-            'order_number' => $order->order_number,
-            'redirect' => route('orders.show', $order->id)
+            'redirect' => route('orders.success', $order->id)
         ]);
+    }
+
+    public function success(Order $order)
+    {
+        if ($order->user_id !== auth()->id()) {
+            abort(403);
+        }
+        return view('orders.success', compact('order'));
     }
 
     public function uploadReceipt(Request $request, Order $order)
