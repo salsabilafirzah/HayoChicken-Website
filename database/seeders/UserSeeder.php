@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
         // Admin
         User::create([
             'name' => 'Hayo Chicken Admin',
-            'email' => 'owner@hayochicken.com',
+            'email' => 'admin@hayochicken.com',
             'password' => Hash::make('password'),
             'role' => 'seller',
             'phone' => '08123456789',
@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
         // Buyer
         User::create([
             'name' => 'John Doe',
-            'email' => 'buyer@example.com',
+            'email' => 'buyer@gmail.com',
             'password' => Hash::make('password'),
             'role' => 'buyer',
             'phone' => '08987654321',

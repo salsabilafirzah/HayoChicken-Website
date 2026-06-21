@@ -7,8 +7,6 @@ use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::view('/favorites', 'favorites')->name('favorites');
 
 Route::middleware(['auth', 'seller'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -18,12 +16,17 @@ Route::middleware(['auth', 'seller'])->prefix('admin')->name('admin.')->group(fu
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::view('/favorites', 'favorites')->name('favorites');
+    
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/orders/{order}/receipt', [OrderController::class, 'uploadReceipt'])->name('orders.receipt');
     
-    Route::view('/dashboard-user', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', function () {
+        return redirect()->route('home');
+    })->name('dashboard');
 });
 
 require __DIR__.'/settings.php';
