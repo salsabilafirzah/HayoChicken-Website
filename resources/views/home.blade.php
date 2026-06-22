@@ -25,7 +25,7 @@
                         <h2 class="text-4xl md:text-7xl font-black mb-2 leading-none drop-shadow-lg text-white uppercase tracking-tighter">OUR NEW <br>MENU</h2>
                         <p class="text-lg md:text-xl font-bold opacity-90 mb-8 max-w-md">Nikmati Paket Nasgor spesial dengan bumbu rahasia Hayo Chicken. Gurihnya bikin nagih!</p>
                         <button 
-                            onclick="filterCategory('Nasgor'); document.getElementById('menu-section').scrollIntoView({behavior:'smooth'})" 
+                            onclick="quickAddToCart('Paket Nasi Goreng')" 
                             class="bg-dark-red text-white px-10 py-4 rounded-full font-black text-lg hover:bg-bright-yellow hover:text-dark-red hover:scale-110 transition shadow-xl"
                         >
                             Pesan Sekarang
@@ -45,7 +45,7 @@
                         <h2 class="text-4xl md:text-7xl font-black mb-2 leading-none drop-shadow-lg">BEST <br><span class="text-bright-yellow">SELLER KIT!</span></h2>
                         <p class="text-lg md:text-xl font-medium opacity-90 mb-8 max-w-md">Paket Ayam Geprek andalan sejuta umat. Sambal merahnya juara!</p>
                         <button 
-                            onclick="filterCategory('Ayam'); document.getElementById('menu-section').scrollIntoView({behavior:'smooth'})" 
+                            onclick="quickAddToCart('Paket Ayam Geprek')" 
                             class="bg-bright-yellow text-dark-red px-10 py-4 rounded-full font-black text-lg hover:bg-white hover:scale-110 transition shadow-xl"
                         >
                             Sikat Sekarang
@@ -195,6 +195,21 @@
     window.allProducts = @json($products);
 
     let currentCategory = 'all';
+
+    function quickAddToCart(productName) {
+        const product = allProducts.find(p => p.name === productName);
+        if (product) {
+            addToCart(product.id, event);
+            // Tunggu sebentar biar efek animasinya jalan, lalu pindah halaman
+            setTimeout(() => {
+                window.location.href = "{{ route('cart.index') }}";
+            }, 500);
+        } else {
+            document.getElementById('menu-search').value = productName;
+            filterMenu();
+            document.getElementById('menu').scrollIntoView({behavior:'smooth'});
+        }
+    }
 
     function updateCategory(category, element) {
         currentCategory = category;
