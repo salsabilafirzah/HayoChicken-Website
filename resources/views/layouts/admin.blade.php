@@ -49,6 +49,35 @@
         .sidebar-link.active svg {
             @apply text-dark-red;
         }
+
+        /* Total Pagination Reset */
+        nav[role="navigation"] * {
+            outline: none !important;
+            box-shadow: none !important;
+            --tw-ring-color: transparent !important;
+            --tw-ring-offset-shadow: 0 0 #0000 !important;
+            --tw-ring-shadow: 0 0 #0000 !important;
+        }
+        nav[role="navigation"] span[aria-current="page"] > span {
+            background-color: #9B1A1A !important;
+            border-color: #9B1A1A !important;
+            color: white !important;
+            font-weight: 800 !important;
+        }
+        nav[role="navigation"] a:hover {
+            color: #FFB21E !important;
+            border-color: #FFB21E !important;
+            background-color: rgba(155, 26, 26, 0.1) !important;
+        }
+        nav[role="navigation"] a, 
+        nav[role="navigation"] span {
+            border-color: rgba(155, 26, 26, 0.1) !important;
+            color: #64748b !important;
+            background-color: white !important;
+        }
+        nav[role="navigation"] svg {
+            color: currentColor !important;
+        }
     </style>
 </head>
 <body class="bg-admin-bg text-slate-700 min-h-screen flex" x-data="{ sidebarOpen: true }">
