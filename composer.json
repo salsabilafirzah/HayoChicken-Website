@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/livewire-starter-kit",
+    "name": "hayo-chicken/sistem-pemesanan",
     "type": "project",
-    "description": "The official Laravel starter kit for Livewire.",
+    "description": "Sistem Pemesanan Makanan Hayo Chicken berbasis Laravel.",
     "keywords": [
         "laravel",
         "framework"
@@ -82,7 +82,6 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "@php rename_livewire_files.php",
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
