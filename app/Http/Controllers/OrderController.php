@@ -31,7 +31,7 @@ class OrderController extends Controller
             'items' => 'required',
             'delivery_address' => 'required|string',
             'payment_method' => 'required|string',
-            'payment_receipt' => 'nullable|image|max:2048',
+            'payment_receipt' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $items = is_string($request->items) ? json_decode($request->items, true) : $request->items;
@@ -94,7 +94,7 @@ class OrderController extends Controller
         }
 
         $request->validate([
-            'payment_receipt' => 'required|image|max:2048',
+            'payment_receipt' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         if ($request->hasFile('payment_receipt')) {

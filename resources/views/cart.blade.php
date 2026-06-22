@@ -101,7 +101,7 @@
                                     <div class="text-left space-y-3" x-data="{ fileName: '' }">
                                         <label class="text-xs font-semibold text-gray-400 text-center block">2. Upload Bukti Transfer</label>
                                         <div class="relative">
-                                            <input type="file" name="payment_receipt" @change="fileName = $event.target.files[0].name" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                                            <input type="file" name="payment_receipt" accept="image/png, image/jpeg" @change="fileName = $event.target.files[0].name" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                                             <div :class="fileName ? 'bg-bg-cream border-dark-red shadow-md' : 'bg-gray-50 border-gray-300 border-dashed hover:border-dark-red/50 hover:bg-white'" class="border-2 rounded-2xl p-6 text-center transition-all duration-300 cursor-pointer group-hover:scale-[1.02]">
                                                 <p class="text-sm font-semibold tracking-tight" :class="fileName ? 'text-dark-red' : 'text-gray-400 group-hover:text-dark-red'" x-text="fileName ? fileName : 'Klik untuk pilih foto'"></p>
                                             </div>

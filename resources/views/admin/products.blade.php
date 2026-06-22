@@ -109,7 +109,7 @@
 
                 <div class="space-y-2">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Foto Menu</label>
-                    <input type="file" name="image" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red">
+                    <input type="file" name="image" accept="image/png, image/jpeg" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red">
                 </div>
 
                 <div class="pt-4 flex space-x-3">
@@ -153,7 +153,7 @@
 
                 <div class="space-y-2">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Ganti Foto (Opsional)</label>
-                    <input type="file" name="image" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red">
+                    <input type="file" name="image" accept="image/png, image/jpeg" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red">
                 </div>
 
                 <div class="pt-4 flex space-x-3">

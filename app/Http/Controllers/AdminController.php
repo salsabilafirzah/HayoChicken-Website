@@ -74,7 +74,7 @@ class AdminController extends Controller
             'category' => 'required|string|max:255',
             'price' => 'required|numeric',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $data = $request->all();
@@ -95,7 +95,7 @@ class AdminController extends Controller
             'category' => 'required|string|max:255',
             'price' => 'required|numeric',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $data = $request->all();
