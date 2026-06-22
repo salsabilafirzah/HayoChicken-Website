@@ -126,33 +126,47 @@
     <!-- Product Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach($products as $product)
-        <div data-category="{{ $product->category }}" class="product-card bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 group border border-gray-100 flex flex-col h-full">
+        <div data-category="{{ $product->category }}" class="product-card bg-white rounded-[3rem] overflow-hidden shadow-xl hover:shadow-2xl transition duration-500 group border border-gray-100 flex flex-col h-full animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div class="relative h-64 overflow-hidden">
-                <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : asset($product->image) }}" 
+                <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : (Str::startsWith($product->image, 'images/') ? asset($product->image) : asset('storage/' . $product->image)) }}" 
                      alt="{{ $product->name }}" 
                      onerror="this.src='https://placehold.co/600x400?text={{ urlencode($product->name) }}'"
-                     class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute top-4 right-4">
-                    <button onclick="toggleFavorite({{ json_encode($product) }})" id="fav-btn-{{ $product->id }}" class="w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400 hover:text-red-500 transition shadow-lg">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                     class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                
+                <!-- Badges -->
+                <div class="absolute top-6 left-6 flex flex-col gap-2">
+                    <div class="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full shadow-sm">
+                        <span class="text-[10px] font-black text-dark-red uppercase tracking-widest">{{ $product->category }}</span>
+                    </div>
+                </div>
+
+                <!-- Favorite Toggle -->
+                <div class="absolute top-6 right-6">
+                    <button id="fav-btn-{{ $product->id }}" 
+                            onclick="toggleFavorite({{ json_encode($product) }})" 
+                            class="w-12 h-12 bg-white/90 backdrop-blur-md rounded-2xl flex items-center justify-center text-gray-400 transition shadow-xl hover:scale-110 active:scale-90">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                     </button>
                 </div>
-                <div class="absolute bottom-0 left-0 bg-bright-yellow text-dark-red px-6 py-2 font-black rounded-tr-3xl shadow-lg">
+
+                <!-- Price Tag -->
+                <div class="absolute bottom-0 left-0 bg-bright-yellow text-dark-red px-8 py-3 font-black rounded-tr-[2rem] shadow-lg text-lg">
                     Rp {{ number_format($product->price, 0, ',', '.') }}
                 </div>
             </div>
             
-            <div class="p-8 flex-grow flex flex-col justify-between">
+            <div class="p-10 flex-grow flex flex-col justify-between">
                 <div>
-                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 block">{{ $product->category }}</span>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-3 group-hover:text-dark-red transition">{{ $product->name }}</h3>
-                    <p class="text-gray-500 line-clamp-2 leading-relaxed">{{ $product->description }}</p>
+                    <h3 class="text-2xl font-black text-gray-800 mb-2 group-hover:text-dark-red transition tracking-tight">{{ $product->name }}</h3>
+                    <p class="text-gray-500 text-sm font-medium leading-relaxed line-clamp-2 mb-2">{{ $product->description }}</p>
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">PILIHAN TERBAIK</p>
                 </div>
                 
-                <div class="mt-8 pt-6 border-t border-gray-100">
-                    <button onclick="addToCart({{ $product->id }})" class="w-full bg-dark-red text-white py-4 rounded-2xl hover:bg-bright-yellow hover:text-dark-red transition shadow-lg flex items-center justify-center space-x-3 group/btn">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        <span class="font-bold">Tambah ke Keranjang</span>
+                <div class="mt-10 pt-8 border-t border-dashed border-gray-100">
+                    <button onclick="addToCart({{ $product->id }}, event)" 
+                            class="w-full bg-dark-red text-white py-5 rounded-[1.5rem] hover:bg-bright-yellow hover:text-dark-red transition shadow-xl flex items-center justify-center space-x-4 group/btn transform active:scale-95">
+                        <svg class="w-6 h-6 transform group-hover/btn:rotate-90 transition duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
+                        <span class="font-black uppercase tracking-widest text-xs">Tambah ke Keranjang</span>
                     </button>
                 </div>
             </div>
@@ -177,90 +191,8 @@
 
 @push('scripts')
 <script>
-    function addToCart(productId) {
-        @guest
-            window.dispatchEvent(new CustomEvent('open-login'));
-            return;
-        @endguest
-
-        const product = @json($products).find(p => p.id === productId);
-        if (!product) return;
-
-        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existing = cart.find(item => item.id === productId);
-        
-        if (existing) {
-            existing.qty += 1;
-        } else {
-            cart.push({
-                id: product.id,
-                name: product.name,
-                price: parseFloat(product.price),
-                image: product.image.startsWith('http') ? product.image : "{{ asset('') }}" + product.image,
-                qty: 1
-            });
-        }
-        
-        localStorage.setItem('cart', JSON.stringify(cart));
-
-        // Simple visual feedback
-        const btn = event.currentTarget;
-        const originalHtml = btn.innerHTML;
-        btn.innerHTML = '<svg class="w-6 h-6 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>';
-        
-        setTimeout(() => {
-            btn.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
-            btn.classList.replace('bg-dark-red', 'bg-green-500');
-            
-            const cartCount = document.getElementById('cart-count');
-            if (cartCount) cartCount.innerText = cart.length;
-            window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: cart.length } }));
-            
-            setTimeout(() => {
-                btn.innerHTML = originalHtml;
-                btn.classList.replace('bg-green-500', 'bg-dark-red');
-            }, 1000);
-        }, 500);
-    }
-
-    function toggleFavorite(product) {
-        @guest
-            window.dispatchEvent(new CustomEvent('open-login'));
-            return;
-        @endguest
-
-        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-        const index = favorites.findIndex(f => f.id === product.id);
-        const btn = document.getElementById(`fav-btn-${product.id}`);
-        
-        if (index > -1) {
-            favorites.splice(index, 1);
-            btn.classList.remove('text-red-500');
-            btn.classList.add('text-gray-400');
-        } else {
-            favorites.push({
-                id: product.id,
-                name: product.name,
-                category: product.category,
-                price: product.price,
-                image: product.image.startsWith('http') ? product.image : "{{ asset('') }}" + product.image
-            });
-            btn.classList.remove('text-gray-400');
-            btn.classList.add('text-red-500');
-        }
-        
-        localStorage.setItem('favorites', JSON.stringify(favorites));
-    }
-
-    function syncFavorites() {
-        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-        favorites.forEach(f => {
-            const btn = document.getElementById(`fav-btn-${f.id}`);
-            if (btn) {
-                btn.classList.replace('text-gray-400', 'text-red-500');
-            }
-        });
-    }
+    // Register products globally for the centralized functions
+    window.allProducts = @json($products);
 
     let currentCategory = 'all';
 
@@ -325,14 +257,6 @@
         
         filterMenu();
     }
-
-    // Sync cart count and favorites on load
-    document.addEventListener('DOMContentLoaded', () => {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const cartCount = document.getElementById('cart-count');
-        if (cartCount) cartCount.innerText = cart.length;
-        syncFavorites();
-    });
 </script>
 @endpush
 @endsection

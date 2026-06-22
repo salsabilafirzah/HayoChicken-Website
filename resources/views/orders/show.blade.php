@@ -105,7 +105,7 @@
                         @foreach($order->items as $item)
                         <div class="flex items-center space-x-4">
                             <div class="w-12 h-12 bg-bg-cream rounded-xl flex-shrink-0 flex items-center justify-center font-black text-dark-red overflow-hidden">
-                                <img src="{{ asset($item->product->image) }}" class="w-full h-full object-cover">
+                                <img src="{{ Str::startsWith($item->product->image, 'http') ? $item->product->image : (Str::startsWith($item->product->image, 'images/') ? asset($item->product->image) : asset('storage/' . $item->product->image)) }}" class="w-full h-full object-cover">
                             </div>
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-black text-gray-800 truncate">{{ $item->product->name }}</p>

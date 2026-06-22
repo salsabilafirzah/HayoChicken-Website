@@ -12,7 +12,11 @@ Route::middleware(['auth', 'seller'])->prefix('admin')->name('admin.')->group(fu
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
     Route::patch('/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('orders.status');
+    
     Route::get('/products', [AdminController::class, 'products'])->name('products');
+    Route::post('/products', [AdminController::class, 'storeProduct'])->name('products.store');
+    Route::patch('/products/{product}', [AdminController::class, 'updateProduct'])->name('products.update');
+    Route::delete('/products/{product}', [AdminController::class, 'deleteProduct'])->name('products.destroy');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -30,6 +34,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/profile/password', [HomeController::class, 'updatePassword'])->name('profile.password');
     
     Route::get('/dashboard', function () {
+        if (auth()->user()->role === 'seller') {
+            return redirect()->route('admin.dashboard');
+        }
         return redirect()->route('home');
     })->name('dashboard');
 });

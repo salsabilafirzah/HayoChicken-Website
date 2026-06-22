@@ -61,7 +61,6 @@
             background: #9B1A1A66;
         }
     </style>
-    @livewireStyles
 </head>
 <body class="min-h-screen flex flex-col" 
     x-data="{ showLogin: false, showRegister: false, cartCount: 0 }"
@@ -254,10 +253,6 @@
                 <p class="text-gray-400 max-w-sm mb-8 leading-relaxed">
                     Menghadirkan kelezatan ayam goreng dengan bumbu rahasia yang meresap sampai ke tulang. Pengalaman makan tak terlupakan setiap saat.
                 </p>
-                <div class="flex space-x-4">
-                    <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-dark-red transition"><svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.56v14.88c0 2.48-2.02 4.56-4.56 4.56H4.56C2.02 24 0 21.92 0 19.44V4.56C0 2.02 2.02 0 4.56 0h14.88C21.98 0 24 2.02 24 4.56zM8.33 18.33V8.33h-1.66v10h1.66zm.84-11.25c0-.6-.48-1.08-1.08-1.08-.6 0-1.08.48-1.08 1.08 0 .6.48 1.08 1.08 1.08.6 0 1.08-.48 1.08-1.08zM18.33 18.33v-5.42c0-2.65-2.15-4.58-4.58-4.58-1.14 0-2.17.43-2.95 1.14V8.33H9.14v10h1.66v-5.63c0-1.74 1.4-3.14 3.14-3.14 1.74 0 3.14 1.4 3.14 3.14v5.63h1.25z"/></svg></a>
-                    <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-red-600 transition"><svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.332 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.332-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.032-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308 1.266-.058 1.646-.07 4.85-.07zM12 0C8.741 0 8.333.014 7.053.072 2.695.27.27 2.69 0.072 7.053 0.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.351-.2 6.777-2.616 6.98-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
-                </div>
             </div>
             <div>
                 <h4 class="font-bold mb-6 text-bright-yellow uppercase text-xs tracking-widest">Hayo Links</h4>
@@ -288,9 +283,108 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Already handled by Alpine x-init
-        });
+        function addToCart(productId, event, productData = null) {
+            @guest
+                window.dispatchEvent(new CustomEvent('open-login'));
+                return;
+            @endguest
+
+            let product = null;
+            if (productData) {
+                product = productData;
+            } else {
+                // If on home page, products are in a global variable
+                if (window.allProducts) {
+                    product = window.allProducts.find(p => p.id === productId);
+                }
+            }
+            
+            if (!product) return;
+
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existing = cart.find(item => item.id === productId);
+            
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: parseFloat(product.price),
+                    image: product.image.startsWith('http') ? product.image : (product.image.startsWith('images/') ? "{{ asset('') }}" + product.image : "{{ asset('storage') }}/" + product.image),
+                    qty: 1
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Visual feedback
+            const btn = event.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<svg class="w-6 h-6 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>';
+                btn.classList.replace('bg-dark-red', 'bg-green-500');
+                
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) cartCount.innerText = cart.length;
+                window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: cart.length } }));
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.replace('bg-green-500', 'bg-dark-red');
+                }, 1000);
+            }, 500);
+        }
+
+        function toggleFavorite(product) {
+            @guest
+                window.dispatchEvent(new CustomEvent('open-login'));
+                return;
+            @endguest
+
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            const index = favorites.findIndex(f => f.id === product.id);
+            const btn = document.getElementById(`fav-btn-${product.id}`);
+            
+            if (index > -1) {
+                favorites.splice(index, 1);
+                if (btn) {
+                    btn.classList.remove('text-red-500');
+                    btn.classList.add('text-gray-400');
+                }
+            } else {
+                favorites.push({
+                    id: product.id,
+                    name: product.name,
+                    category: product.category,
+                    price: product.price,
+                    image: product.image
+                });
+                if (btn) {
+                    btn.classList.remove('text-gray-400');
+                    btn.classList.add('text-red-500');
+                }
+            }
+            
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+
+            // If on favorites page, re-render
+            if (window.location.pathname.includes('favorites')) {
+                if (typeof renderFavorites === 'function') renderFavorites();
+            }
+        }
+
+        function syncFavorites() {
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            favorites.forEach(f => {
+                const btn = document.getElementById(`fav-btn-${f.id}`);
+                if (btn) {
+                    btn.classList.replace('text-gray-400', 'text-red-500');
+                }
+            });
+        }
 
         function confirmLogout(event) {
             event.preventDefault();
@@ -299,7 +393,7 @@
             Swal.fire({
                 title: 'Keluar Akun?',
                 text: "Apakah kamu yakin ingin keluar dari Hayo Chicken?",
-                icon: 'warning',
+                iconHtml: '<svg class="w-16 h-16 text-dark-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>',
                 showCancelButton: true,
                 confirmButtonColor: '#9B1A1A',
                 cancelButtonColor: '#aaaaaa',
@@ -307,9 +401,10 @@
                 cancelButtonText: 'Batal',
                 borderRadius: '2.5rem',
                 customClass: {
-                    popup: 'rounded-[2.5rem] shadow-2xl',
+                    popup: 'rounded-[2.5rem] shadow-2xl p-8',
                     confirmButton: 'rounded-full px-8 py-3 font-black uppercase text-xs tracking-widest',
-                    cancelButton: 'rounded-full px-8 py-3 font-black uppercase text-xs tracking-widest'
+                    cancelButton: 'rounded-full px-8 py-3 font-black uppercase text-xs tracking-widest',
+                    icon: 'border-none'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -318,6 +413,5 @@
             });
         }
     </script>
-    @livewireScripts
 </body>
 </html>

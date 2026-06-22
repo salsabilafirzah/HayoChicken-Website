@@ -15,16 +15,39 @@ class AdminController extends Controller
             'total_orders' => Order::count(),
             'pending_orders' => Order::where('status', 'pending')->count(),
             'total_products' => Product::count(),
+            
+            // Payment Methods Summary
+            'revenue_qris' => Order::where('status', 'completed')->whereIn('payment_method', ['qris', 'QRIS'])->sum('total_price'),
+            'revenue_cod' => Order::where('status', 'completed')->whereIn('payment_method', ['cash', 'CASH', 'cod', 'COD'])->sum('total_price'),
+            
+            // Monthly Trend (Dummy for chart)
+            'monthly_sales' => [1200, 1900, 3000, 5000, 2000, 3000],
         ];
         
+        // Top Selling Products based on quantity sold in completed orders
+        $top_products = Product::withSum(['orderItems as total_sold' => function($query) {
+            $query->whereHas('order', function($q) {
+                $q->where('status', 'completed');
+            });
+        }], 'qty')
+        ->orderByDesc('total_sold')
+        ->take(5)
+        ->get();
+            
         $recent_orders = Order::with('user')->latest()->take(5)->get();
         
-        return view('admin.dashboard', compact('stats', 'recent_orders'));
+        // Detailed Payment Summary (Completed Orders)
+        $report_orders = Order::with(['user', 'items.product'])
+            ->where('status', 'completed')
+            ->latest()
+            ->get();
+        
+        return view('admin.dashboard', compact('stats', 'recent_orders', 'top_products', 'report_orders'));
     }
 
     public function orders()
     {
-        $orders = Order::with('user')->latest()->paginate(10);
+        $orders = Order::with(['user', 'items.product'])->latest()->paginate(10);
         return view('admin.orders', compact('orders'));
     }
 
@@ -42,5 +65,53 @@ class AdminController extends Controller
     {
         $products = Product::latest()->paginate(10);
         return view('admin.products', compact('products'));
+    }
+
+    public function storeProduct(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        Product::create($data);
+
+        return back()->with('success', 'Produk berhasil ditambahkan.');
+    }
+
+    public function updateProduct(Request $request, Product $product)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($data);
+
+        return back()->with('success', 'Produk berhasil diperbarui.');
+    }
+
+    public function deleteProduct(Product $product)
+    {
+        $product->delete();
+        return back()->with('success', 'Produk berhasil dihapus.');
     }
 }
