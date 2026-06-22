@@ -46,4 +46,13 @@ Sistem ini dibangun dengan menggunakan stack teknologi modern untuk memastikan p
 7. Jalankan server lokal dengan perintah `php artisan serve`.
 
 ## Hak Cipta
-Dikembangkan untuk keperluan sistem manajemen pemesanan makanan Hayo Chicken.
+Dikembangkan untuk keperluan proyek Mata Kuliah Pemrograman Web 2 oleh:
+
+**Anggota Kelompok:**
+
+| No | Nama | NIM |
+|:---:|:---|:---|
+| 1 | Salsabila Firzah Amanina | H1D024069 |
+| 2 | Putri Isnaini Laksita Utami | H1D024078 |
+| 3 | Hana Naila Rahmadina | H1D024093 |
+| 4 | Zainab Feizia | H1D024097 |
