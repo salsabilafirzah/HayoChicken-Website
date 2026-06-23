@@ -23,6 +23,7 @@
                     <tr class="bg-soft-cream/30 text-[10px] text-slate-400 uppercase tracking-widest border-b border-dark-red/5">
                         <th class="px-8 py-6 font-black">Produk</th>
                         <th class="px-8 py-6 font-black">Kategori</th>
+                        <th class="px-8 py-6 font-black">Deskripsi</th>
                         <th class="px-8 py-6 font-black">Harga</th>
                         <th class="px-8 py-6 font-black text-right">Aksi</th>
                     </tr>
@@ -42,6 +43,9 @@
                             <span class="px-3 py-1 bg-bright-yellow/10 rounded-full text-[9px] font-black uppercase tracking-wider text-dark-red">
                                 {{ $product->category }}
                             </span>
+                        </td>
+                        <td class="px-8 py-4">
+                            <p class="text-xs text-slate-500 font-medium line-clamp-2 max-w-xs">{{ $product->description }}</p>
                         </td>
                         <td class="px-8 py-4 font-black text-sm text-slate-800">
                             Rp {{ number_format($product->price, 0, ',', '.') }}
@@ -108,6 +112,11 @@
                 </div>
 
                 <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Deskripsi Produk</label>
+                    <textarea name="description" rows="3" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red" placeholder="Jelaskan kelezatan menu ini..."></textarea>
+                </div>
+
+                <div class="space-y-2">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Foto Menu</label>
                     <input type="file" name="image" accept="image/png, image/jpeg" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red">
                 </div>
@@ -149,6 +158,11 @@
                 <div class="space-y-2">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Harga (Rp)</label>
                     <input type="number" name="price" x-model="currentProduct.price" required class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Deskripsi Produk</label>
+                    <textarea name="description" x-model="currentProduct.description" rows="3" class="w-full bg-slate-50 border-none rounded-2xl p-4 text-sm focus:ring-2 focus:ring-dark-red"></textarea>
                 </div>
 
                 <div class="space-y-2">

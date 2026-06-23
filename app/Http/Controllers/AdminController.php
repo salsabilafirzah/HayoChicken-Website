@@ -20,8 +20,7 @@ class AdminController extends Controller
             'revenue_qris' => Order::where('status', 'completed')->whereIn('payment_method', ['qris', 'QRIS'])->sum('total_price'),
             'revenue_cod' => Order::where('status', 'completed')->whereIn('payment_method', ['cash', 'CASH', 'cod', 'COD'])->sum('total_price'),
             
-            // Monthly Trend (Dummy for chart)
-            'monthly_sales' => [1200, 1900, 3000, 5000, 2000, 3000],
+
         ];
         
         // Top Selling Products based on quantity sold in completed orders
