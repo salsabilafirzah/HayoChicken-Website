@@ -211,7 +211,12 @@
                 </div>
                 <div class="mt-4 pt-4 border-t border-slate-100/50">
                     <p class="text-[10px] text-slate-400 leading-relaxed italic">
-                        <span class="font-bold text-indigo-400">Saran:</span> Pertahankan promosi QRIS untuk mengurangi risiko kembalian uang tunai dan mempermudah audit kas harian.
+                        <span class="font-bold text-indigo-400">Saran:</span>
+                        @if($qris_percent >= $cod_percent)
+                            Pertahankan promosi QRIS untuk mengurangi risiko kembalian uang tunai dan mempermudah audit kas harian.
+                        @else
+                            Pembayaran tunai masih mendominasi. Pertimbangkan promo khusus QRIS untuk mempercepat transaksi dan mengurangi risiko uang palsu/selisih kas.
+                        @endif
                     </p>
                 </div>
             </div>
