@@ -198,9 +198,13 @@
             <div class="mt-12 bg-slate-50 rounded-2xl p-6 border border-slate-100">
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-xs font-bold text-slate-500">Rasio Pembayaran</span>
-                    <span class="text-xs font-black text-indigo-600">{{ round($qris_percent) }}% QRIS</span>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">{{ round($qris_percent) }}% QRIS</span>
+                        <span class="text-[10px] text-slate-300">|</span>
+                        <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{{ round($cod_percent) }}% COD</span>
+                    </div>
                 </div>
-                <p class="text-[10px] text-slate-400 leading-relaxed italic">Saran: Pertahankan promosi QRIS untuk mengurangi risiko kembalian uang tunai.</p>
+                <p class="text-[10px] text-slate-400 leading-relaxed italic">Saran: Pertahankan promosi QRIS untuk mengurangi risiko kembalian uang tunai dan mempermudah audit kas.</p>
             </div>
         </div>
     </div>
