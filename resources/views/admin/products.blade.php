@@ -84,7 +84,7 @@
     <!-- MODAL: ADD PRODUCT -->
     <div x-show="showAddModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-6">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="showAddModal = false"></div>
-        <div class="relative bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl p-8 animate-in zoom-in duration-300">
+        <div class="relative bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto overscroll-contain rounded-[2.5rem] shadow-2xl p-8 animate-in zoom-in duration-300 custom-scrollbar">
             <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter mb-8">Tambah Menu Baru</h3>
             
             <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
@@ -132,7 +132,7 @@
     <!-- MODAL: EDIT PRODUCT -->
     <div x-show="showEditModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-6">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" @click="showEditModal = false"></div>
-        <div class="relative bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl p-8 animate-in zoom-in duration-300">
+        <div class="relative bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto overscroll-contain rounded-[2.5rem] shadow-2xl p-8 animate-in zoom-in duration-300 custom-scrollbar">
             <h3 class="text-2xl font-black text-slate-800 uppercase tracking-tighter mb-8">Edit Menu</h3>
             
             <form :action="'{{ url('admin/products') }}/' + currentProduct.id" method="POST" enctype="multipart/form-data" class="space-y-5">
