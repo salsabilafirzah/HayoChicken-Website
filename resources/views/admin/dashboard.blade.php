@@ -196,15 +196,24 @@
             </div>
 
             <div class="mt-12 bg-slate-50 rounded-2xl p-6 border border-slate-100">
-                <div class="flex items-center justify-between mb-4">
-                    <span class="text-xs font-bold text-slate-500">Rasio Pembayaran</span>
-                    <div class="flex items-center space-x-3">
-                        <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">{{ round($qris_percent) }}% QRIS</span>
-                        <span class="text-[10px] text-slate-300">|</span>
-                        <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{{ round($cod_percent) }}% COD</span>
+                <div class="space-y-4">
+                    <span class="text-xs font-black text-slate-500 uppercase tracking-widest">Rasio Pembayaran</span>
+                    <div class="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                        <div class="text-center flex-1 border-r border-slate-50">
+                            <p class="text-lg font-black text-indigo-600">{{ round($qris_percent) }}%</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">QRIS</p>
+                        </div>
+                        <div class="text-center flex-1">
+                            <p class="text-lg font-black text-emerald-600">{{ round($cod_percent) }}%</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Tunai (COD)</p>
+                        </div>
                     </div>
                 </div>
-                <p class="text-[10px] text-slate-400 leading-relaxed italic">Saran: Pertahankan promosi QRIS untuk mengurangi risiko kembalian uang tunai dan mempermudah audit kas.</p>
+                <div class="mt-4 pt-4 border-t border-slate-100/50">
+                    <p class="text-[10px] text-slate-400 leading-relaxed italic">
+                        <span class="font-bold text-indigo-400">Saran:</span> Pertahankan promosi QRIS untuk mengurangi risiko kembalian uang tunai dan mempermudah audit kas harian.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
